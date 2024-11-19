@@ -1,56 +1,42 @@
+import random
+import string
 
-def stringEncryption(text, key):
-	# Initializing cipherText
-	cipherText = ""
-	cipher = []
-	for i in range(len(key)):
-		cipher.append(ord(text[i]) - ord('A') + ord(key[i])-ord('A'))
-	for i in range(len(key)):
-		if cipher[i] > 25:
-			cipher[i] = cipher[i] - 26
-	for i in range(len(key)):
-		x = cipher[i] + ord('A')
-		cipherText += chr(x)
-	return cipherText
-def stringDecryption(s, key):
-	plainText = ""
-	plain = []
+class VernamCipher:
+    @staticmethod
+    def generate_key(length):
+        return ''.join(random.choice(string.ascii_uppercase) for _ in range(length))
+    
+    @staticmethod
+    def text_to_numbers(text):
+        return [ord(c) - ord('A') for c in text.upper()]
+    
+    @staticmethod
+    def numbers_to_text(numbers):
+        return ''.join(chr(n + ord('A')) for n in numbers)
+    
+    @staticmethod
+    def encrypt(plaintext, key):
+        plaintext_nums = VernamCipher.text_to_numbers(plaintext)
+        key_nums = VernamCipher.text_to_numbers(key)
+        cipher_nums = [(p + k) % 26 for p, k in zip(plaintext_nums, key_nums)]
+        return VernamCipher.numbers_to_text(cipher_nums)
+    
+    @staticmethod
+    def decrypt(ciphertext, key):
+        ciphertext_nums = VernamCipher.text_to_numbers(ciphertext)
+        key_nums = VernamCipher.text_to_numbers(key)
+        plaintext_nums = [(c - k) % 26 for c, k in zip(ciphertext_nums, key_nums)]
+        return VernamCipher.numbers_to_text(plaintext_nums)
 
-	for i in range(len(key)):
-		plain.append(ord(s[i]) - ord('A') - (ord(key[i]) - ord('A')))
+def main():
+    message = "GODWINMONSERATE"
+    print(f"Original message: {message}")
+    key = VernamCipher.generate_key(len(message))
+    print(f"Generated key: {key}")
+    encrypted = VernamCipher.encrypt(message, key)
+    print(f"Encrypted message: {encrypted}")
+    decrypted = VernamCipher.decrypt(encrypted, key)
+    print(f"Decrypted message: {decrypted}")
 
-	for i in range(len(key)):
-		if (plain[i] < 0):
-			plain[i] = plain[i] + 26
-
-	for i in range(len(key)):
-		x = plain[i] + ord('A')
-		plainText += chr(x)
-
-	return plainText
-
-def randomKeyGenerator(length):
-	key = ""
-	for i in range(length):
-		key += chr(ord('A') + i)
-	return key
-
-plainText = input("Enter message: ")
-
-key = input("Enter key: ")
-if key == "":
-	key = randomKeyGenerator(len(plainText))
-elif len(key) != len(plainText) and key != "":
-	print("Key length should be equal to message length")
-	exit()
-
-encryptedText = stringEncryption(plainText.upper(), key.upper())
-
-mode = input("Enter mode (encrypt/decrypt): ")
-if mode.lower() == "encrypt":
-	print("Encrypted message:", encryptedText)
-elif mode.lower() == "decrypt":
-	print("Decrypted message:", stringDecryption(plainText.upper(), key.upper()))
-else:
-	print("Invalid mode")
-
+if __name__ == "__main__":
+    main()
