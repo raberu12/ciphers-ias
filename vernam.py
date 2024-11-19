@@ -35,7 +35,7 @@ def randomKeyGenerator(length):
 		key += chr(ord('A') + i)
 	return key
 
-plainText = input("Enter message to encrypt: ")
+plainText = input("Enter message: ")
 
 key = input("Enter key: ")
 if key == "":
