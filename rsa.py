@@ -67,14 +67,13 @@ def decrypt_message(private_key_pem, encrypted_message_base64):
 
 generate_keys()  
 
-# Load keys from the .pem files
 with open("public_key.pem", "rb") as public_file:
     public_key_pem = public_file.read()
 
 with open("private_key.pem", "rb") as private_file:
     private_key_pem = private_file.read()
 
-# Encrypt a message
+
 message = "GODWIN MONSERATE"
 print(f"Original message: {message}")
 
